@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from "./router";
+import store from './store'
 import ElementUI from 'element-ui';
 import "core-js/stable";
 import "regenerator-runtime/runtime";
@@ -28,5 +29,6 @@ router.afterEach(() => {
 })
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')

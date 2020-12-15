@@ -78,23 +78,34 @@
           </el-form-item>
         </el-col>
         <el-col :span="11">
-            <el-form-item label="工单等级" prop="orderLevel" class="teshu">
-              <el-select
-                v-model="formData.orderLevel"
-                placeholder="请选择工单等级"
-                clearable
-                :style="{ width: '100%' }"
+          <el-form-item class="is-required" prop="orderLevel">
+            <span slot="label" class="auto-label"
+              >工单等级
+              <el-popover
+                placement="top"
+                width="150"
+                trigger="hover"
+                popper-class="bg-popover"
+                content="高级（既紧急又重要的任务）、中级（紧急、重要的任务）、一般（除高级、中级以外的其他工单）"
               >
-                <el-option
-                  v-for="(item, index) in orderLevelOptions"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value"
-                  :disabled="item.disabled"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            
+                <i class="tip" slot="reference">(?)</i>
+              </el-popover>
+            </span>
+            <el-select
+              v-model="formData.orderLevel"
+              placeholder="请选择工单等级"
+              clearable
+              :style="{ width: '100%' }"
+            >
+              <el-option
+                v-for="(item, index) in orderLevelOptions"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+                :disabled="item.disabled"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </el-col>
         <el-col :span="11">
           <el-form-item label="要求完成日期" prop="completeDate">
@@ -133,13 +144,14 @@
         </el-col>
         <el-col :span="11">
           <el-form-item label="承办人" prop="acceptName">
-            <el-select
+            <el-input
               v-model="formData.acceptName"
               placeholder="请选择承办人"
-              clearable
+              readonly
+              @focus="showDrawer"
               :style="{ width: '100%' }"
             >
-            </el-select>
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11">
@@ -285,17 +297,20 @@
         </el-col>
       </el-form>
     </el-row>
+    <find-drawer :visible.sync="drawerVisible" :wrapperClosable="false" :show-close="false" size="50%" ></find-drawer>
   </div>
 </template>
 
 <script>
-import {addDelegate} from '@/api'
+import { addDelegate } from "@/api";
+import findDrawer from './components/findDrawer.vue'
 export default {
-  components: {},
+  components: {findDrawer},
   props: [],
   data() {
     return {
-      creatorUserCode:'hejw29',
+      drawerVisible:false,
+      creatorUserCode: "hejw29",
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() < Date.now();
@@ -312,24 +327,24 @@ export default {
         },
       ],
       formData: {
-        orderTitle: '',
-        applyName: '何建文',
-        applyOa:'hejw', //
-        applyPhone: '18565125218',
-        applyOrg:'网络bg',
-        applySite:'能力创新团队',
-        orderType:'',
-        orderLevel:'',
-        completeDate:'',
-        investmentMoney:'',
-        profitMoney:'',
-        acceptOa:'dengy29', //承办人oa
-        acceptName:'邓寅', //承办人名字
-        acceptPhone:'18602030872', // 承办人电话
-        acceptSite:'测试部门',
-        acceptOrg:'测试部门',
-        requireOutline:'' ,
-        requireDetails:''
+        orderTitle: "",
+        applyName: "何建文",
+        applyOa: "hejw", //
+        applyPhone: "18565125218",
+        applyOrg: "网络bg",
+        applySite: "能力创新团队",
+        orderType: "",
+        orderLevel: "",
+        completeDate: "",
+        investmentMoney: "",
+        profitMoney: "",
+        acceptOa: "dengy29", //承办人oa
+        acceptName: "", //承办人名字
+        acceptPhone: "18602030872", // 承办人电话
+        acceptSite: "测试部门",
+        acceptOrg: "测试部门",
+        requireOutline: "",
+        requireDetails: "",
       },
       rules: {
         orderTitle: [
@@ -434,11 +449,12 @@ export default {
       ],
     };
   },
-  computed: {},
-  watch: {},
   created() {},
   mounted() {},
   methods: {
+    showDrawer(){
+      this.drawerVisible = true
+    },
     submitForm() {
       this.$refs["elForm"].validate(async (valid) => {
         if (!valid) return;
@@ -448,16 +464,16 @@ export default {
             creatorUserCode: this.formData.applyOa,
             formName: this.formData.orderTitle,
             systemSn: "flow",
-            processDefinitionKey: "WlbgProcessKey"
+            processDefinitionKey: "WlbgProcessKey",
           },
-          formDatas:[
+          formDatas: [
             {
-              formKey:'formkey1',
-              formData:JSON.stringify(this.formData)
-            }         
-          ]
-        })
-        console.log(res)
+              formKey: "formkey1",
+              formData: JSON.stringify(this.formData),
+            },
+          ],
+        });
+        console.log(res);
       });
     },
     handleSee() {},
@@ -493,14 +509,11 @@ export default {
 .el-upload__tip {
   line-height: 1.2;
 }
-
 .btn-group {
   margin-top: 40px;
 }
-// .teshu >>> label:after {
-//   content: '(?)';
-//   color: #F56C6C;
-//   font-size:14px;
-//   cursor:pointer
-// }
+
+.auto-label .tip {
+  color: red;
+}
 </style>

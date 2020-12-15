@@ -5,7 +5,7 @@
             <Aside></Aside>
             <div class="content-wrap">
                 <BreadCrumb class="breadcrumb-container" />
-                <el-scrollbar class="scrollbar">
+                <el-scrollbar class="bg-scrollbar">
                     <router-view  class="x-hidden"/>
                 </el-scrollbar>
                
@@ -52,6 +52,4 @@ import Nav from '@/components/layout/Nav.vue'
         .el-scrollbar
             flex 1
             padding-bottom 15px
-            overflow-y auto
-            overflow-x hidden
 </style>
