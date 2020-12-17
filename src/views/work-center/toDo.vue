@@ -59,7 +59,10 @@ export default {
         this.tableData = res.data.list;
       }
     },
-    handleClick() {},
+    handleClick(val) {
+      let {processInstanceId,taskId} = val
+      this.$router.push({path: '/workCenter/apply',query: {processInstanceId,taskId}})
+    },
     handleSizeChange(){},
     handleCurrentChange(){},
   },

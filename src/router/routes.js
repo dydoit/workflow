@@ -48,7 +48,14 @@ const vueRoutes = [
             name: 'addWork',
             component: () => import('@/views/work-center/add.vue'),
             meta: {title: '新增工单'}
-          }
+          },
+          {
+            path: 'apply',
+            name: 'apply',
+            component: () => import('@/views/work-center/apply.vue'),
+            meta: {title: '审批工单'},
+            hidden: true
+          },
         ]
       }
 ]
