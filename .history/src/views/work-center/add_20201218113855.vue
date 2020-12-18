@@ -484,7 +484,7 @@ export default {
   methods: {
     async getLeaderList(){
       let res = await this.$http.queryLeaderList({
-          limit: 1000,
+          limit: 30,
           page: 1,
           siteCode: '00440038487'
       })

@@ -10,7 +10,7 @@
       <el-table-column prop="approver" label="操作">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"
-            >办理</el-button
+            >跟踪</el-button
           >
         </template>
       </el-table-column>
@@ -37,7 +37,7 @@
 export default {
   data() {
     return {
-      userCode: "chenfen6", // junbinmo, hejw29
+      userCode: "junbinmo", // junbinmo, hejw29
       tableData: [],
       limit: 10,
       currentPage: 1,
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     async getData() {
-      let res = await this.$http.getApplyingTasks({
+      let res = await this.$http.getFinished({
         userCode: this.userCode,
         limit: this.limit,
         page: this.currentPage,

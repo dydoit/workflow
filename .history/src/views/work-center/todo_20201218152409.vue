@@ -37,7 +37,7 @@
 export default {
   data() {
     return {
-      userCode: "chenfen6", // junbinmo, hejw29
+      userCode: "hejw29", // junbinmo, hejw29
       tableData: [],
       limit: 10,
       currentPage: 1,

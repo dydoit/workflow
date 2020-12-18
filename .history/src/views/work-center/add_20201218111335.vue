@@ -484,7 +484,7 @@ export default {
   methods: {
     async getLeaderList(){
       let res = await this.$http.queryLeaderList({
-          limit: 1000,
+          limit: 30,
           page: 1,
           siteCode: '00440038487'
       })
@@ -567,10 +567,10 @@ export default {
       });
     },
     handleSee({fileUrl}) { //预览
-      location.href = pathHead+fileUrl
+      location.href = pathHead+url
     },
     handleLoad({fileUrl}) { // 下载
-      location.href = pathHead+fileUrl
+      location.href = pathHead+url
     },
     async handleDel({fileId}) { // 删除附件
       let res = await this.$http.delAttach({

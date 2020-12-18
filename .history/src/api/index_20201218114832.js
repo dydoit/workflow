@@ -112,14 +112,6 @@ export function getFormTableByPid(params){
         params:{...params}
     })
 }
-// 获取历史节点表单（除去开始表单）
-export function getHisFromDatas(params){
-    return request({
-        url: '/flowable/workCenter/getHisFromDatas',
-        method: 'get',
-        params:{...params}
-    })
-}
 // 审批我的待办
 export function apply(params){
     return request({
@@ -128,18 +120,10 @@ export function apply(params){
         data:params
     })
 }
-// 查看流程下所有附件
+// 
 export function getAttachmentByProcessInstanceId(params){
     return request({
         url: '/flowable/workCenter/attachmentByProcessInstanceId',
-        method: 'get',
-        params:{...params}
-    })
-}
-// 查看我的已办
-export function getFinished(params){
-    return request({
-        url: '/flowable/workCenter/getApplyedTasks',
         method: 'get',
         params:{...params}
     })

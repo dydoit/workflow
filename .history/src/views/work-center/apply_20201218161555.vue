@@ -393,6 +393,7 @@ export default {
           JSON.parse(res.formData.customDeForm);
         this.currentFormKey = data && data.formKey;
       }
+      console.log(JSON.parse(res.formData.customDeForm));
     },
     async getHisFromDatas(processInstanceId) {
       // 获取开始表单之外的历史表单
@@ -412,7 +413,7 @@ export default {
       // 下载
       location.href = pathHead + url;
     },
-    async submitForm() { // 总提交方法
+    async submitForm() { //总提交方法
       const formData =
         this.currentFormKey === "WlbgFormKey2"
           ? {
@@ -423,7 +424,7 @@ export default {
       let res = await this.$http.apply({
         taskId: this.taskId,
         pId: this.processInstanceId,
-        userId: "chenfen6", //提交者oa，暂时写死测试
+        userId: "hejw29", //登陆者oa，暂时写死测试
         approveDatas: this.approveDatas,
         formDatas: this.currentFormKey
           ? [

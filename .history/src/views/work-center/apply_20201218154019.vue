@@ -322,12 +322,11 @@ const pathHead = "http://10.210.9.218/uniflowFileSystem";
 export default {
   data() {
     return {
-      currentFormKey: null, // 用来识别当前流程到哪个环节
+      currentFormKey: "", // 用来识别当前流程到哪个环节
       processInstanceId: "", //流程id
       taskId: "", // 任务id
       formData: {},
-      eitFormData: {}, // 当前可编辑的表单
-      hisFormDatas: [], // 历史表单
+      hisFormData:[],
       approveDatas: {
         approveMsg: "",
         approveFlag: "",
@@ -355,7 +354,7 @@ export default {
     processInstanceId && this.getFormTableByPid(processInstanceId, taskId);
     processInstanceId &&
       this.getAttachmentByProcessInstanceId(processInstanceId);
-    processInstanceId && this.getHisFromDatas(processInstanceId);
+    processInstanceId && this.getHisFromDatas(processInstanceId)
   },
   methods: {
     async getFormTableByPid(processInstanceId, taskId) {
@@ -393,16 +392,10 @@ export default {
           JSON.parse(res.formData.customDeForm);
         this.currentFormKey = data && data.formKey;
       }
+      console.log(JSON.parse(res.formData.customDeForm));
     },
-    async getHisFromDatas(processInstanceId) {
-      // 获取开始表单之外的历史表单
-      let res = await this.$http.getHisFromDatas({
-        processInstanceId,
-      });
-      if (res.code === 0) {
-        this.hisFormDatas = res.fromDatas;
-      }
-      console.log(res);
+    async getHisFromDatas(processInstanceId) { // 获取开始表单之外的历史表单
+
     },
     handleSee({ url }) {
       //预览
@@ -412,28 +405,12 @@ export default {
       // 下载
       location.href = pathHead + url;
     },
-    async submitForm() { // 总提交方法
-      const formData =
-        this.currentFormKey === "WlbgFormKey2"
-          ? {
-              shishibumenName: this.shishibumenName,
-              shishibumenOa: this.shishibumenOa,
-            }
-          : null;
+    async submitForm() {
       let res = await this.$http.apply({
         taskId: this.taskId,
         pId: this.processInstanceId,
-        userId: "chenfen6", //提交者oa，暂时写死测试
+        userId: "junbinmo", //登陆者oa，暂时写死测试
         approveDatas: this.approveDatas,
-        formDatas: this.currentFormKey
-          ? [
-              {
-                formKey: this.currentFormKey,
-                formData: JSON.stringify(formData),
-              },
-            ]
-          : null,
-        formKeys: this.currentFormKey
       });
       if (res.code === 0) {
         this.$message.success("提交成功");

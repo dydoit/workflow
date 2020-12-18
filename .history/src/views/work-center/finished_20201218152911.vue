@@ -10,7 +10,7 @@
       <el-table-column prop="approver" label="操作">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"
-            >办理</el-button
+            >跟踪</el-button
           >
         </template>
       </el-table-column>
@@ -30,26 +30,31 @@
       >
       </el-pagination>
     </div>
+    <progress-img></progress-img>
   </div>
 </template>
 
 <script>
+import ProgressImg from './components/progressImg.vue'
 export default {
   data() {
     return {
-      userCode: "chenfen6", // junbinmo, hejw29
+      userCode: "junbinmo", // junbinmo, hejw29
       tableData: [],
       limit: 10,
       currentPage: 1,
       value: false
     };
   },
+  components: {
+      ProgressImg,
+  },
   created() {
     this.getData();
   },
   methods: {
     async getData() {
-      let res = await this.$http.getApplyingTasks({
+      let res = await this.$http.getFinished({
         userCode: this.userCode,
         limit: this.limit,
         page: this.currentPage,
@@ -60,8 +65,13 @@ export default {
       }
     }, 
     handleClick(val) {
-      let {processInstanceId,taskId} = val
-      this.$router.push({path: '/workCenter/apply',query: {processInstanceId,taskId}})
+      let {processInstanceId} = val
+      let res = await getWorkImg({
+        processInstanceId
+      })
+      let data = btoa(new Uint8Array(res).reduce((data, byte) => data + String.fromCharCode(byte), ''))
+      this.imgUrl = `data:image/png;base64,${data}`
+      this.$refs.progress.isShow = true
     },
     handleSizeChange(){},
     handleCurrentChange(){},
