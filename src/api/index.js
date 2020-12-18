@@ -96,6 +96,22 @@ export function getApplyingTasks(params){
         params:{...params}
     })
 }
+// 获取当前节点是否有审批表单
+export function getCurrentFromJson(params){
+    return request({
+        url: '/flowable/workCenter/getCurrentFromJson',
+        method: 'get',
+        params:{...params}
+    })
+}
+// 获取开始表单
+export function getFormTableByPid(params){
+    return request({
+        url: '/flowable/workCenter/getFormTableByPid',
+        method: 'get',
+        params:{...params}
+    })
+}
 // 审批我的待办
 export function apply(params){
     return request({
