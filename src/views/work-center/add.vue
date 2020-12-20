@@ -360,12 +360,12 @@ export default {
         completeDate: "",
         investmentMoney: "",
         profitMoney: "",
-        acceptOa: "dengy29", //承办人oa
+        acceptOa: "", //承办人oa
         acceptName: "", //承办人名字
-        acceptPhone: "18602030872", // 承办人电话
-        acceptSite: "承办单位", // 承办人部门名称
+        acceptPhone: "", // 承办人电话
+        acceptSite: "", // 承办人部门名称
         acceptSiteCode: "", // 承办部门code
-        acceptOrg: "承办部门", //  承办人单位名称
+        acceptOrg: "", //  承办人单位名称
         acceptOrgCode: "", //承办人单位code
         requireOutline: "",
         requireDetails: "",
@@ -536,8 +536,8 @@ export default {
       let res = await this.$http.addDelegate(params)
       if(res.code === 0) {
         this.$message.success('提交成功')
+        // 此处该有动作
       }
-      console.log(res)
     },
     selectedAccept({
       deptName,

@@ -39,7 +39,7 @@ import ProgressImg from './components/progressImg.vue'
 export default {
   data() {
     return {
-      userCode: "junbinmo", // junbinmo, hejw29, chenfen6， 承办人oa：gd-luozd5
+      userCode: "hejw29", // junbinmo, hejw29, chenfen6， 承办人oa：gd-luozd5
       tableData: [],
       limit: 10,
       currentPage: 1,
@@ -60,6 +60,7 @@ export default {
         limit: this.limit,
         page: this.currentPage,
       });
+      console.log(res)
       if (res.code === 0) {
         this.total = res.data.totalCount
         this.tableData = res.data.list;
@@ -75,7 +76,10 @@ export default {
       this.$refs.progress.isShow = true
     },
     handleSizeChange(){},
-    handleCurrentChange(){},
+    handleCurrentChange(val){
+      this.currentPage = val
+      this.getData()
+    },
   },
 };
 </script>
