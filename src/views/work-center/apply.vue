@@ -10,6 +10,24 @@
         label-width="150px"
         disabled
       >
+        <el-col :span="11">
+          <el-form-item label="工单编号">
+            <el-input
+              v-model="formData.flowWorkOrderNo"
+              :maxlength="100"
+              :style="{ width: '100%' }"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11">
+          <el-form-item label="提交日期">
+            <el-input
+              v-model="formData.flowCreateDate"
+              :maxlength="100"
+              :style="{ width: '100%' }"
+            ></el-input>
+          </el-form-item>
+        </el-col>
         <el-col :span="22">
           <el-form-item class="is-required" label="工单标题" prop="orderTitle">
             <el-input
@@ -261,6 +279,275 @@
       </el-col>
     </el-row>
     <el-divider></el-divider>
+    <!-- 实施阶段表单 -->
+    <template v-if="currentFormKey === 'WlbgFormKey3'">
+      <div class="title-tip">实施反馈：</div>
+      <el-row :gutter="10">
+        <el-form
+          ref="shishiForm"
+          :model="shishiData"
+          size="small"
+          label-width="120px"
+        >
+          <el-col :span="7">
+            <el-form-item class="is-required" label="完成情况">
+              <el-select
+                v-model="shishiData.completeSituation"
+                placeholder="请选择"
+                clearable
+                :style="{ width: '100%' }"
+              >
+                <el-option
+                  v-for="(item, index) in completeOptions"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="item.disabled"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="完成日期">
+              <el-input disabled v-model="shishiData.completionTime"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="处理及时">
+              <el-input disabled v-model="shishiData.handleTimely"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="22">
+            <el-form-item label="备注">
+              <el-input
+                v-model="shishiData.acceptComment"
+                type="textarea"
+                placeholder="请输入说明"
+                :maxlength="2000"
+                :autosize="{ minRows: 4, maxRows: 4 }"
+                :style="{ width: '100%' }"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="22">
+            <el-form-item label="上传附件">
+              <el-upload
+                ref="shishiAttatch"
+                :action="attachmentAction"
+                :before-upload="attachmentBeforeUpload"
+                :show-file-list="false"
+                :on-success="handleShishiUpload"
+              >
+                <el-button size="small" type="primary" icon="el-icon-upload"
+                  >点击上传</el-button
+                >
+              </el-upload>
+            </el-form-item>
+          </el-col>
+        </el-form>
+        <el-col :span="22">
+          <el-table :data="shishiAttachmentList" border size="small">
+            <el-table-column
+              label="序号"
+              type="index"
+              align="center"
+              width="50"
+            ></el-table-column>
+            <el-table-column
+              header-align="center"
+              align="center"
+              label="文档标题"
+            >
+              <template slot-scope="scope">
+                <el-input
+                  v-model="scope.row.description"
+                  placeholder="请输入标题"
+                  size="small"
+                ></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column
+              header-align="center"
+              align="center"
+              prop="uploadTime"
+              width="120"
+              label="创建时间"
+            >
+            </el-table-column>
+            <el-table-column
+              header-align="center"
+              align="center"
+              prop="userName"
+              width="80"
+              label="创建人"
+            >
+            </el-table-column>
+            <el-table-column
+              header-align="center"
+              align="center"
+              prop="fileName"
+              label="附件名称"
+            >
+            </el-table-column>
+            <el-table-column label="操作" width="130">
+              <template slot-scope="scope">
+                <el-button @click="handleSee(scope.row)" type="text" size="mini"
+                  >预览</el-button
+                >
+                <el-button
+                  @click="handleLoad(scope.row)"
+                  type="text"
+                  size="mini"
+                  >下载</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-col>
+      </el-row>
+      <el-divider></el-divider>
+    </template>
+    <!-- 结果评价 -->
+    <template v-if="currentFormKey === 'WlbgFormKey4'">
+      <div class="title-tip">结果评价：</div>
+      <el-row :gutter="10">
+        <el-form :model="evaluationData" size="small" label-width="120px">
+          <el-col :span="8">
+            <el-form-item class="is-required">
+              <span slot="label" class="auto-label"
+                >回单质量
+                <el-popover
+                  placement="top"
+                  width="150"
+                  trigger="hover"
+                  popper-class="bg-popover"
+                  content="高（6分，严格按照工单要求完成），中（4分，工单整体完成，但在完备性、准确性上存在明显不足），低（1分，工单完成不符合要求）"
+                >
+                  <i class="tip" slot="reference">(?)</i>
+                </el-popover>
+              </span>
+              <el-select
+                v-model="evaluationData.receiptQualityScore"
+                placeholder="请选择回单质量"
+                clearable
+                :style="{ width: '100%' }"
+              >
+                <el-option
+                  v-for="(item, index) in receiptQualityScoreOptions"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item class="is-required">
+              <span slot="label" class="auto-label"
+                >回单及时性
+                <el-popover
+                  placement="top"
+                  width="150"
+                  trigger="hover"
+                  popper-class="bg-popover"
+                  content="及时（4分，严格按照工单时限要求完成）、超时（2分，工单超时48小时（含）以内）、严重超时（0分，工单超时48小时以上）"
+                >
+                  <i class="tip" slot="reference">(?)</i>
+                </el-popover>
+              </span>
+              <el-select
+                v-model="evaluationData.receiptTimelyScore"
+                placeholder="请选择回单及时性"
+                clearable
+                :style="{ width: '100%' }"
+              >
+                <el-option
+                  v-for="(item, index) in receiptTimelyScoreOptions"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="合计评价得分">
+              <el-input disabled v-model="receiptSumScore"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="22">
+            <el-form-item label="上传附件">
+              <el-upload
+                ref="evaluationAttatch"
+                :action="attachmentAction"
+                :before-upload="attachmentBeforeUpload"
+                :show-file-list="false"
+                :on-success="handleEvaluationUpload"
+              >
+                <el-button size="small" type="primary" icon="el-icon-upload"
+                  >点击上传</el-button
+                >
+              </el-upload>
+            </el-form-item>
+          </el-col>
+        </el-form>
+        <el-table :data="evaluationAttachmentList" border size="small">
+          <el-table-column
+            label="序号"
+            type="index"
+            align="center"
+            width="50"
+          ></el-table-column>
+          <el-table-column
+            header-align="center"
+            align="center"
+            label="文档标题"
+          >
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.description"
+                placeholder="请输入标题"
+                size="small"
+              ></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column
+            header-align="center"
+            align="center"
+            prop="uploadTime"
+            width="120"
+            label="创建时间"
+          >
+          </el-table-column>
+          <el-table-column
+            header-align="center"
+            align="center"
+            prop="userName"
+            width="80"
+            label="创建人"
+          >
+          </el-table-column>
+          <el-table-column
+            header-align="center"
+            align="center"
+            prop="fileName"
+            label="附件名称"
+          >
+          </el-table-column>
+          <el-table-column label="操作" width="130">
+            <template slot-scope="scope">
+              <el-button @click="handleSee(scope.row)" type="text" size="mini"
+                >预览</el-button
+              >
+              <el-button @click="handleLoad(scope.row)" type="text" size="mini"
+                >下载</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-row>
+      <el-divider></el-divider>
+    </template>
     <div class="title-tip">办理意见：</div>
     <el-row :gutter="15">
       <el-form ref="form" :model="approveDatas" label-width="120px">
@@ -319,6 +606,16 @@
 
 <script>
 const pathHead = "http://10.210.9.218/uniflowFileSystem";
+const receiptQualityObj = {
+  6: "高",
+  4: "中",
+  1: "低",
+};
+const receiptTimelyObj = {
+  4: "及时",
+  2: "超时",
+  0: "严重超时",
+};
 export default {
   data() {
     return {
@@ -328,18 +625,79 @@ export default {
       formData: {},
       eitFormData: {}, // 当前可编辑的表单
       hisFormDatas: [], // 历史表单
+      shishiData: {
+        completeSituation: "", // 完成情况
+        completionTime: "", //完成日期
+        handleTimely: "", //处理及时
+        acceptComment: "", //备注说明
+      },
+      evaluationData: {
+        // 评价表单
+        receiptQuality: "", //回单质量
+        receiptQualityScore: "", //回单质量得分
+        receiptTimely: "", // 回单及时性
+        receiptTimelyScore: "", // 回单及时性得分
+        receiptSumScore: "", // 合计评价得分
+        receiptComment: "", // 备注
+      },
+      receiptQualityObj,
+      receiptTimelyObj,
       approveDatas: {
         approveMsg: "",
         approveFlag: "",
       },
       apply: "", //0为同意，1为不同意
-      startAttachmentList: [],
+      startAttachmentList: [], // 开始阶段表单附件列表
       dialogVisible1: false, //选择实施部门领导弹框
       shishibumenName: "", // 实施部门领导名字
       shishibumenOa: "", //实施部门领导oa
       shishiLeaderOptions: [], // 实施部门领导list
       shishiLeaderObj: {},
+      attachmentAction: "/uniflowApi/manage/tblmanageattachment/addAttachment",
+      completeOptions: [
+        {
+          label: "全部完成",
+          value: "全部完成",
+        },
+        {
+          label: "部分完成",
+          value: "部分完成",
+        },
+        {
+          label: "未完成",
+          value: "未完成",
+        },
+      ],
+      shishiAttachmentList: [], //实施阶段上传附件列表
+      evaluationAttachmentList: [], //评价阶段上传附件列表
+      receiptQualityScoreOptions: [
+        { label: "高", value: 6 },
+        { label: "中", value: 4 },
+        { label: "低", value: 1 },
+      ],
+      receiptTimelyScoreOptions: [
+        { label: "及时", value: 4 },
+        { label: "超时", value: 2 },
+        { label: "严重超时", value: 0 },
+      ],
     };
+  },
+  computed: {
+    receiptSumScore() {
+      return (
+        this.evaluationData.receiptQualityScore +
+        this.evaluationData.receiptTimelyScore
+      );
+    },
+    receiptQuality() {
+      // 回单质量中文
+      return this.receiptQualityObj[this.evaluationData.receiptQualityScore];
+    },
+    receiptTimely() {
+      return this.receiptTimelyObj[
+        this.evaluationData.receiptTimelyScore
+      ];
+    },
   },
   watch: {
     currentFormKey(newVal) {
@@ -404,26 +762,53 @@ export default {
       }
       console.log(res);
     },
-    handleSee({ url }) {
+    handleSee({ fileUrl }) {
       //预览
-      location.href = pathHead + url;
+      location.href = pathHead + fileUrl;
     },
-    handleLoad({ url }) {
+    handleLoad({ fileUrl }) {
       // 下载
-      location.href = pathHead + url;
+      location.href = pathHead + fileUrl;
     },
-    async submitForm() { // 总提交方法
+    async submitForm() {
+      // 总提交方法
       const formData =
         this.currentFormKey === "WlbgFormKey2"
           ? {
               shishibumenName: this.shishibumenName,
               shishibumenOa: this.shishibumenOa,
             }
+          : this.currentFormKey === "WlbgFormKey3"
+          ? {
+              ...this.shishiData,
+            }
+          : this.currentFormKey === "WlbgFormKey4"
+          ? {
+              ...this.evaluationData,
+              receiptQuality: this.receiptQuality,
+              receiptTimely: this.receiptTimely,
+            }
           : null;
+      const fileDatas =
+        this.currentFormKey === "WlbgFormKey3"
+          ? this.shishiAttachmentList.map((item) => {
+              return {
+                ...item,
+                fileType: this.currentFormKey,
+              };
+            })
+          : this.currentFormKey === "WlbgFormKey4"
+          ? this.evaluationAttachmentList.map((item) => {
+              return {
+                ...item,
+                fileType: this.currentFormKey,
+              };
+            })
+          : [];
       let res = await this.$http.apply({
         taskId: this.taskId,
         pId: this.processInstanceId,
-        userId: "chenfen6", //提交者oa，暂时写死测试
+        userId: "hejw29", //提交者oa，暂时写死测试
         approveDatas: this.approveDatas,
         formDatas: this.currentFormKey
           ? [
@@ -433,7 +818,8 @@ export default {
               },
             ]
           : null,
-        formKeys: this.currentFormKey
+        formKeys: this.currentFormKey,
+        fileDatas,
       });
       if (res.code === 0) {
         this.$message.success("提交成功");
@@ -467,6 +853,43 @@ export default {
             };
           }, {});
       }
+    },
+    handleShishiUpload(res, file, fileList) {
+      // 实施阶段上传附件
+      if (res.code === 0) {
+        let { fileUrl, fileName, userName, uploadTime, fileId, fileType } = res;
+        this.shishiAttachmentList.push({
+          fileName,
+          fileComment: "",
+          fileId,
+          fileType,
+          fileUrl,
+          uploadTime,
+          userName,
+        });
+      }
+    },
+    handleEvaluationUpload(res, file, fileList) {
+      // 评价阶段上传附件
+      if (res.code === 0) {
+        let { fileUrl, fileName, userName, uploadTime, fileId, fileType } = res;
+        this.evaluationAttachmentList.push({
+          fileName,
+          fileComment: "",
+          fileId,
+          fileType,
+          fileUrl,
+          uploadTime,
+          userName,
+        });
+      }
+    },
+    attachmentBeforeUpload(file) {
+      let isRightSize = file.size / 1024 / 1024 < 2;
+      if (!isRightSize) {
+        this.$message.error("文件大小超过 2MB");
+      }
+      return isRightSize;
     },
     selectShishiLeader() {},
   },

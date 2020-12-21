@@ -37,7 +37,11 @@
 export default {
   data() {
     return {
+<<<<<<< HEAD
       userCode: "chenfen6", // junbinmo, hejw29，chenfen6
+=======
+      userCode: "hejw29", // junbinmo, hejw29
+>>>>>>> 893164ac3a1e72c63df84ce10b68b0061050339c
       tableData: [],
       limit: 10,
       currentPage: 1,
