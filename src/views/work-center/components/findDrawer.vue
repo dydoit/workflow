@@ -67,7 +67,7 @@
           </el-pagination>
         </div>
       </el-scrollbar>
-      
+
       <!-- <div class="btn-group">
           <el-button  size="small">取消</el-button>
           <el-button type="primary" size="small">确定</el-button>
@@ -120,6 +120,12 @@ export default {
       selectedRolObj:{}, // 选中人部门和单位
     };
   },
+  props: {
+    isSelectDepartment: {
+      type: Boolean,
+      default: true,
+    },
+  },
   created() {
     this.getData();
   },
@@ -136,9 +142,15 @@ export default {
       }
     },
     async handleSelect({oa,name,phone}) {
+        this.role = '' // 清空之前选择的角色
         this.selectedOa = oa
         this.selectedName = name
         this.selectedPhone = phone
+        // 如果设置了不选择部门，则直接返回，跳过选择部门
+        if (!this.isSelectDepartment) {
+          this.sureSelect()
+          return
+        }
         let res = await this.$http.queryRoleList({
             oa
         })
@@ -159,20 +171,31 @@ export default {
         }
     },
     sureSelect() {
-        this.$emit('selected', this.selectedRolObj)
+        if (this.isSelectDepartment) {
+          this.$emit('selected', this.selectedRolObj)
+        } else {
+          this.$emit('selected', { name: this.selectedName, oa: this.selectedOa })
+        }
         this.dialogVisible = false
         this.$emit('update:visible', false)
     },
     selectRole(val){
         this.selectedRolObj = {
             ...this.optionsObj[val],
-            oa: this.selectedOa, 
+            oa: this.selectedOa,
             name: this.selectedName,
             phone: this.selectedPhone
         }
     },
-    handleSizeChange() {},
-    handleCurrentPageChange() {},
+    handleSizeChange(val) {
+      this.limit = val
+      this.currentPage = 1
+      this.getData()
+    },
+    handleCurrentPageChange(val) {
+      this.currentPage = val
+      this.getData()
+    },
     handleCurrentChange(val) {
       this.currentRow = val;
     },
