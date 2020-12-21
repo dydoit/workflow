@@ -11,4 +11,12 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+router.beforeEach((to,from,next)=>{
+  // if(localStorage.getItem('token')) {
+   //     next()
+  // } else {
+//    跳回登录页面
+  // }
+  next()
+}) 
 export default router

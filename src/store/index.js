@@ -5,10 +5,12 @@ Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production';
 export default new Vuex.Store({
     state: {
+        token: localStorage.getItem('token'),
         user:{
             name: '',
             oa:'',
-            org:''
+            org:'',
+            siteCode: '00440038487'
         }
     },
     getters:{
@@ -17,6 +19,15 @@ export default new Vuex.Store({
     mutations: {
         setRole(state, {org}) {
             state.user.org = org
+        },
+        setToken(state, token) {
+            state.token = token
+            localStorage.setItem('token',token)
+        }
+    },
+    actions: {
+        getUser({ commit }){ // 登录，获取token
+
         }
     },
     plugins: debug ? [createLogger()] : []

@@ -333,7 +333,8 @@
     </el-row>
     <el-divider></el-divider>
     <!-- 实施阶段表单 -->
-    <template v-if="currentFormKey === 'WlbgFormKey3'">
+    <!-- 当处于实施阶段时或者历史表单里有formKey为WlbgFormKey3就要渲染这个表单 -->
+    <template v-if="currentFormKey === 'WlbgFormKey3'||currentFormKey === 'WlbgFormKey4'">
       <div class="title-tip">实施反馈：</div>
       <el-row :gutter="10">
         <el-form
@@ -467,6 +468,7 @@
       <el-divider></el-divider>
     </template>
     <!-- 结果评价 -->
+    <!-- 当处于评价阶段时或者历史表单里有formKey为WlbgFormKey4就要渲染这个表单 -->
     <template v-if="currentFormKey === 'WlbgFormKey4'">
       <div class="title-tip">结果评价：</div>
       <el-row :gutter="10">
