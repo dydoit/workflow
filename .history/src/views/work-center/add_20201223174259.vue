@@ -525,6 +525,7 @@ export default {
       }
     },
     async sureSubmit(){ //选好审批领导提交
+      this.isClickSubmit = true
       if(this.isClickSubmit) {
         this.$message.error('请勿频繁点击提交')
         return 
@@ -533,7 +534,6 @@ export default {
         this.$message.error('请选择需求部门领导')
         return
       }
-      this.isClickSubmit = true
       let params = {
            proInsDatas: {
             creatorUserCode: this.user.oa,
@@ -560,7 +560,7 @@ export default {
       this.isClickSubmit = false
       if(res.code === 0) {
         this.$message.success('提交成功')
-        this.$router.push({path: '/workCenter/list'})
+        // this.$router.push({path: '/workCenter/list'})
       }else {
         alert(res.msg)
       }

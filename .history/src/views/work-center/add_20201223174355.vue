@@ -560,7 +560,7 @@ export default {
       this.isClickSubmit = false
       if(res.code === 0) {
         this.$message.success('提交成功')
-        this.$router.push({path: '/workCenter/list'})
+        // this.$router.push({path: '/workCenter/list'})
       }else {
         alert(res.msg)
       }

@@ -529,11 +529,6 @@ export default {
         this.$message.error('请勿频繁点击提交')
         return 
       }
-      if(!this.formData.xuqiubumenOa) {
-        this.$message.error('请选择需求部门领导')
-        return
-      }
-      this.isClickSubmit = true
       let params = {
            proInsDatas: {
             creatorUserCode: this.user.oa,

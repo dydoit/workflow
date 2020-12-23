@@ -283,7 +283,7 @@
         </el-col>
         <el-col :span="24" class="btn-group">
           <el-form-item size="large">
-            <el-button type="primary" @click="submitForm">提交</el-button>
+            <el-button type="primary" @click="submitForm" :loading="true">提交</el-button>
             <el-button @click="resetForm">重置</el-button>
           </el-form-item>
         </el-col>
@@ -316,7 +316,7 @@
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" :loading="isClickSubmit" @click="sureSubmit" size="small"
+        <el-button type="primary" @click="sureSubmit" size="small"
           >确定</el-button
         >
       </span>
@@ -529,11 +529,6 @@ export default {
         this.$message.error('请勿频繁点击提交')
         return 
       }
-      if(!this.formData.xuqiubumenOa) {
-        this.$message.error('请选择需求部门领导')
-        return
-      }
-      this.isClickSubmit = true
       let params = {
            proInsDatas: {
             creatorUserCode: this.user.oa,
@@ -640,9 +635,9 @@ export default {
       this.$refs["elForm"].resetFields();
     },
     attachmentBeforeUpload(file) {
-      let isRightSize = file.size / 1024 / 1024 < 5;
+      let isRightSize = file.size / 1024 / 1024 < 2;
       if (!isRightSize) {
-        this.$message.error("文件大小超过 5MB");
+        this.$message.error("文件大小超过 2MB");
       }
       return isRightSize;
     },

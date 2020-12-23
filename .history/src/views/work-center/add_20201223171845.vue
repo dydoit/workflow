@@ -316,7 +316,7 @@
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" :loading="isClickSubmit" @click="sureSubmit" size="small"
+        <el-button type="primary" @click="sureSubmit" size="small"
           >确定</el-button
         >
       </span>
@@ -529,11 +529,6 @@ export default {
         this.$message.error('请勿频繁点击提交')
         return 
       }
-      if(!this.formData.xuqiubumenOa) {
-        this.$message.error('请选择需求部门领导')
-        return
-      }
-      this.isClickSubmit = true
       let params = {
            proInsDatas: {
             creatorUserCode: this.user.oa,

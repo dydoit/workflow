@@ -1,13 +1,20 @@
 <template>
-  <div>
+  <div class="work-list">
+    <el-button
+      type="primary"
+      size="small"
+      @click="$router.push({ path: '/workCenter/add-work' })"
+      >发起新工单</el-button
+    >
     <el-table v-loading="loadFlag" :data="tableData" style="width: 100%" size="small">
       <el-table-column prop="formName" label="名称" width="180">
       </el-table-column>
-      <el-table-column prop="taskName" label="任务名称" width="180">
+      <el-table-column prop="approver" label="审批人" width="180">
       </el-table-column>
-      <el-table-column prop="systemSn" label="系统"> </el-table-column>
-      <el-table-column prop="approver" label="审批人"> </el-table-column>
-      <el-table-column prop="approver" label="操作">
+      <el-table-column prop="systemSn" label="来源系统"> </el-table-column>
+      <el-table-column prop="startTime" label="发起时间"> </el-table-column>
+      <el-table-column prop="endTime" label="结束时间"> </el-table-column>
+      <el-table-column label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small"
             >跟踪</el-button
@@ -15,7 +22,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分页 -->
     <!-- 分页 -->
     <div class="pagination-wrapper" v-if="tableData.length">
       <el-pagination
@@ -30,60 +36,65 @@
       >
       </el-pagination>
     </div>
-    <progress-img ref="progress" :img-url="imgUrl"></progress-img>
+    <progress-img :img-url="imgUrl" ref="progress"></progress-img>
   </div>
 </template>
 
 <script>
+import { getWorkList, getWorkImg } from "@/api";
 import ProgressImg from './components/progressImg.vue'
 export default {
   data() {
     return {
       loadFlag: true,
-      userCode: this.$store.state.user.oa, // junbinmo, hejw29, chenfen6， 承办人oa：gd-luozd5
-      tableData: [],
-      limit: 10,
+      tableData: [
+      ],
+      limit: 6,
       currentPage: 1,
-      value: false,
-      imgUrl: ''
+      total: 0,
+      imgUrl: '',
     };
   },
   components: {
-      ProgressImg,
+    ProgressImg,
   },
   created() {
     this.getData();
   },
   methods: {
     async getData() {
-      let res = await this.$http.getFinished({
-        userCode: this.userCode,
-        limit: this.limit,
+      let res = await getWorkList({
+        userCode: "hejw29",
         page: this.currentPage,
+        limit: this.limit,
       });
       this.loadFlag = false
       if (res.code === 0) {
-        this.total = res.data.totalCount
-        this.tableData = res.data.list;
+        let { page: data } = res;
+        this.total = data.totalCount;
+        this.tableData = data.list.map(item => {
+          return {
+            ...item,
+            endTime: item.endTime?item.endTime:'--'
+          }
+        });
       }
-    }, 
-    async handleClick(val) {
-      let {processInstanceId} = val
-      let res = await this.$http.getWorkImg({
+    },
+    async handleClick({processInstanceId}) { // 展示详情
+      let res = await getWorkImg({
         processInstanceId
       })
       let data = btoa(new Uint8Array(res).reduce((data, byte) => data + String.fromCharCode(byte), ''))
       this.imgUrl = `data:image/png;base64,${data}`
       this.$refs.progress.isShow = true
     },
-     handleSizeChange(val) {
+    handleSizeChange(val) {
       this.limit = val
       this.loadFlag = true
       this.getData()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.loadFlag = true
       this.getData()
     },
   },
@@ -91,6 +102,13 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.work-list {
+  padding-top: 15px;
+  >.el-button {
+    margin-bottom:15px
+  }
+}
+
 .pagination-wrapper {
   display: flex;
   flex-direction: row-reverse;

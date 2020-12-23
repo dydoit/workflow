@@ -627,7 +627,7 @@
           <el-form-item class="is-required" label="请选择：">
             <el-radio-group v-model="approveDatas.approveFlag">
               <el-radio :label="0">同意</el-radio>
-              <el-radio :label="1" v-if="!(currentFormKey==='WlbgFormKey5' && hisFormDatas.filter(item=>item.formKey==='WlbgFormKey3'||item.formKey==='WlbgFormKey4').length > 0)||(currentFormKey!=='WlbgFormKey3')">不同意</el-radio>
+              <el-radio :label="1" v-if="!(currentFormKey==='WlbgFormKey5' && hisFormDatas.filter(item=>item.formKey==='WlbgFormKey3'||item.formKey==='WlbgFormKey4').length > 0)">不同意</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>

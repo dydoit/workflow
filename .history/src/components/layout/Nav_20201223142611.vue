@@ -60,10 +60,7 @@ export default {
         'junbinmo':'莫俊斌',
         'hejw29':'何建文',
         'dengy29':'邓寅',
-        'zhangyuan3':'张园',
-        "zhangsy178":"张思勇",
-        'chenwh118':'陈文浩',
-        'chenkx':'陈可翔'
+        'zhangyuan3':'张园'
       },
       testOptions:[
         {
@@ -89,10 +86,6 @@ export default {
         {
           label: '陈文浩',
           value: 'chenwh118'
-        },
-        {
-          label: '陈可翔',
-          value:'chenkx'
         }
       ],
       options: [

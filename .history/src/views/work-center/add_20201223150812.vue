@@ -21,7 +21,7 @@
         <el-col :span="11">
           <el-form-item label="申请人" prop="applyName">
             <el-input
-              v-model="user.name"
+              v-model="applyName"
               :disabled="true"
               clearable
             ></el-input>
@@ -208,7 +208,6 @@
               :before-upload="attachmentBeforeUpload"
               :show-file-list="false"
               :on-success="handleUpload"
-              :on-error="handleUploadErr"
             >
               <el-button size="small" type="primary" icon="el-icon-upload"
                 >点击上传</el-button
@@ -316,7 +315,7 @@
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" :loading="isClickSubmit" @click="sureSubmit" size="small"
+        <el-button type="primary" @click="sureSubmit" size="small"
           >确定</el-button
         >
       </span>
@@ -326,7 +325,7 @@
 
 <script>
 import findDrawer from "./components/findDrawer.vue";
-import {mapGetters} from 'vuex'
+import {mapGetters} from '@/store'
 const pathHead = 'http://10.210.9.218/uniflowFileSystem'
 const formKey = 'wlbg'
 export default {
@@ -334,7 +333,6 @@ export default {
   props: [],
   data() {
     return {
-      isClickSubmit: false,
       drawer: false,
       dialogVisible: false,
       applyName:'',
@@ -480,7 +478,7 @@ export default {
     };
   },
   computed:{
-    ...mapGetters(['user'])
+
   },
   watch: {
     applyName(val) {
@@ -492,6 +490,8 @@ export default {
   },
   created() {
     this.getLeaderList()
+    this.formData.applyName = this.applyName
+    this.formData.applyOa = this.applyOa
   },
   mounted() {},
   methods: {
@@ -525,18 +525,9 @@ export default {
       }
     },
     async sureSubmit(){ //选好审批领导提交
-      if(this.isClickSubmit) {
-        this.$message.error('请勿频繁点击提交')
-        return 
-      }
-      if(!this.formData.xuqiubumenOa) {
-        this.$message.error('请选择需求部门领导')
-        return
-      }
-      this.isClickSubmit = true
       let params = {
            proInsDatas: {
-            creatorUserCode: this.user.oa,
+            creatorUserCode: this.formData.applyOa,
             formName: this.formData.orderTitle,
             systemSn: "flow",
             processDefinitionKey: "WlbgProcessKey",
@@ -544,8 +535,7 @@ export default {
           formDatas: [
             {
               formKey: "WlbgFormKey1",
-              formData: JSON.stringify({...this.formData, applyName: this.user.name,
-                  applyOa: this.user.oa}),
+              formData: JSON.stringify(this.formData),
             }
           ],
           fileDatas: this.attachmentList.map(item => ({
@@ -556,13 +546,12 @@ export default {
               fileComment:item.fileComment
           }))
       }
+      this.isSubmit = true
       let res = await this.$http.addDelegate(params)
-      this.isClickSubmit = false
       if(res.code === 0) {
         this.$message.success('提交成功')
         this.$router.push({path: '/workCenter/list'})
-      }else {
-        alert(res.msg)
+        // 此处该有动作
       }
     },
     selectedAccept({
@@ -630,19 +619,15 @@ export default {
           uploadTime,
           userName,
         });
-      }else {
-        this.$message.error(`${res.msg}`)
       }
-    },
-    handleUploadErr(err,file, fileList) {
     },
     resetForm() {
       this.$refs["elForm"].resetFields();
     },
     attachmentBeforeUpload(file) {
-      let isRightSize = file.size / 1024 / 1024 < 5;
+      let isRightSize = file.size / 1024 / 1024 < 2;
       if (!isRightSize) {
-        this.$message.error("文件大小超过 5MB");
+        this.$message.error("文件大小超过 2MB");
       }
       return isRightSize;
     },
