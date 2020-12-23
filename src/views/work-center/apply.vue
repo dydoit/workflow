@@ -262,6 +262,7 @@
               <el-button size="small" type="primary" icon="el-icon-upload"
                 >点击上传</el-button
               >
+             <span style="margin-left:8px;font-size:12px;color: #606266;">只能上传jpg/png/jpeg/xls/xlsx/doc/docx/pdf/ppt/pptx/rar/zip文件，且不超过5M</span>
             </el-upload>
           </el-form-item>
         </el-col>
@@ -396,6 +397,7 @@
                 <el-button size="small" type="primary" icon="el-icon-upload"
                   >点击上传</el-button
                 >
+                <span style="margin-left:8px;font-size:12px;color: #606266;">只能上传jpg/png/jpeg/xls/xlsx/doc/docx/pdf/ppt/pptx/rar/zip文件，且不超过5M</span>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -551,6 +553,7 @@
                 <el-button size="small" type="primary" icon="el-icon-upload"
                   >点击上传</el-button
                 >
+                <span style="margin-left:8px;font-size:12px;color: #606266;">只能上传jpg/png/jpeg/xls/xlsx/doc/docx/pdf/ppt/pptx/rar/zip文件，且不超过5M</span>
               </el-upload>
             </el-form-item>
           </el-col>
